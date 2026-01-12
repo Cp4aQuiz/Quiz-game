@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>English Grammar Lesson</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* RETURN BUTTON */
+.return-container {
+    max-width: 900px;
+    margin: 0 auto 20px auto;
+}
+
+.return-button {
+    display: inline-block;
+    text-decoration: none;
+    background: #2ecc71;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.return-button:hover {
+    background: #27ae60;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.lesson {
+    max-width: 900px;
+    margin: auto;
+}
+
+.section {
+    background: #ffffff;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.section-header {
+    background: #3498db;
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.section-content {
+    display: none;
+    padding: 15px;
+}
+
+.example {
+    background: #ecf0f1;
+    padding: 10px;
+    margin: 10px 0;
+    border-left: 5px solid #3498db;
+}
+
+.note {
+    background: #fff3cd;
+    padding: 10px;
+    margin-top: 10px;
+    border-left: 5px solid #f1c40f;
+}
+
+strong {
+    color: #2c3e50;
+}
+</style>
+</head>
+
+<body>
+
+<!-- RETURN TO INDEX -->
+<div class="return-container">
+    <a href="index.html" class="return-button">← Return to Homepage</a>
+</div>
+
+<h1>English Grammar Essentials</h1>
+
+<div class="lesson">
+
+    <!-- SYNONYMS & ANTONYMS -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            Synonyms and Antonyms
+        </div>
+        <div class="section-content">
+            <p><strong>Synonyms</strong> are words that have the same or nearly the same meaning.</p>
+
+            <div class="example">
+                Big → Large, Huge, Enormous<br>
+                Happy → Joyful, Cheerful, Elated<br>
+                Fast → Quick, Swift, Speedy
+            </div>
+
+            <p><strong>Antonyms</strong> are words that have opposite meanings.</p>
+
+            <div class="example">
+                Big ≠ Small<br>
+                Happy ≠ Sad<br>
+                Fast ≠ Slow
+            </div>
+
+            <div class="note">
+                Synonyms help avoid repetition. Antonyms show contrast.
+            </div>
+        </div>
+    </div>
+
+    <!-- PREPOSITIONS -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            Prepositions
+        </div>
+        <div class="section-content">
+            <div class="example"><strong>In</strong>: She is in the office. I'll be back in an hour.</div>
+            <div class="example"><strong>On</strong>: The book is on the table. The meeting is on Friday.</div>
+            <div class="example"><strong>Into</strong>: She walked into the store.</div>
+            <div class="example"><strong>Onto</strong>: The cat jumped onto the table.</div>
+            <div class="example"><strong>Above</strong>: The plane flew above the clouds.</div>
+        </div>
+    </div>
+
+    <!-- VERB TENSES -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            Verb Tenses
+        </div>
+        <div class="section-content">
+            <div class="example"><strong>Has</strong>: She has eaten breakfast.</div>
+            <div class="example"><strong>Have</strong>: I have eaten. They have arrived.</div>
+            <div class="example"><strong>Had</strong>: I had eaten before I left.</div>
+        </div>
+    </div>
+
+    <!-- LINKING VERBS -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            Linking Verbs
+        </div>
+        <div class="section-content">
+            <div class="example"><strong>Is</strong>: She is a doctor.</div>
+            <div class="example"><strong>Was</strong>: The weather was nice yesterday.</div>
+        </div>
+    </div>
+
+    <!-- MODAL VERBS -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            Modal Verbs
+        </div>
+        <div class="section-content">
+            <div class="example"><strong>Must</strong>: You must wear a helmet.</div>
+            <div class="example"><strong>Should</strong>: You should try this food.</div>
+            <div class="example"><strong>Might</strong>: It might rain tomorrow.</div>
+
+            <div class="note">
+                Must = strong rule<br>
+                Should = advice<br>
+                Might = possibility
+            </div>
+        </div>
+    </div>
+
+    <!-- DEFINITIONS -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            Defining Things
+        </div>
+        <div class="section-content">
+            <div class="example">
+                A book is a written or printed work with pages bound together.
+            </div>
+
+            <div class="example">
+                Photosynthesis is how plants make food using sunlight.
+            </div>
+
+            <div class="note">
+                Use simple language and focus on the main idea.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function toggleSection(header) {
+    const content = header.nextElementSibling;
+    content.style.display = content.style.display === "block" ? "none" : "block";
+}
+</script>
+
+</body>
+</html>

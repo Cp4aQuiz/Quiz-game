@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* GENERAL STYLING */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #eef2ff, #f0f4f8);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* BOX (FORM CONTAINER) */
+.box {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.box:hover {
+    transform: translateY(-3px);
+}
+
+.box h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 24px;
+    color: #4f46e5;
+}
+
+.box input, .box select {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 15px;
+    transition: border 0.3s;
+}
+
+.box input:focus, .box select:focus {
+    outline: none;
+    border-color: #4f46e5;
+}
+
+.box button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #4f46e5;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.box button:hover {
+    background: #4338ca;
+    transform: scale(1.03);
+}
+
+.switch {
+    text-align: center;
+    margin-top: 15px;
+    cursor: pointer;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.hidden {
+    display: none;
+}
+
+/* DASHBOARD */
+#dashboard {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header h2 {
+    font-size: 28px;
+    color: #4f46e5;
+}
+
+.menu-btn {
+    font-size: 28px;
+    cursor: pointer;
+    color: #4f46e5;
+}
+
+.menu {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    background: #fff;
+    border-radius: 12px;
+    width: 200px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.menu a {
+    display: block;
+    padding: 14px 20px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.3s;
+}
+
+.menu a:hover {
+    background: #f0f0f0;
+}
+
+/* CARDS */
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.btn {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    color: white;
+    background: #4f46e5;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+    background: #4338ca;
+    transform: scale(1.05);
+}
+
+/* WELCOME TEXT */
+#welcome {
+    font-size: 18px;
+    font-weight: 500;
+    color: #1f2937;
+}
+
+/* RESPONSIVE */
+@media(max-width: 500px) {
+    .box {
+        padding: 20px;
+    }
+    .header h2 {
+        font-size: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- REGISTER -->
+<div class="box" id="registerBox">
+    <h2>📝 Register</h2>
+    <input type="text" id="regUser" placeholder="Username">
+    <input type="password" id="regPass" placeholder="Password">
+
+    <select id="regStrand">
+        <option value="">Select Strand</option>
+        <option>STEM</option>
+        <option>ABM</option>
+        <option>HUMSS</option>
+        <option>GAS</option>
+        <option>TVL</option>
+    </select>
+
+    <select id="regGrade">
+        <option value="">Grade Level</option>
+        <option>Grade 11</option>
+        <option>Grade 12</option>
+    </select>
+
+    <button onclick="register()">Create Account</button>
+    <div class="switch" onclick="showLogin()">Already have an account? Login</div>
+</div>
+
+<!-- LOGIN -->
+<div class="box hidden" id="loginBox">
+    <h2>🔐 Login</h2>
+    <input type="text" id="loginUser" placeholder="Username">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <div class="switch" onclick="showRegister()">No account? Register</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+    <div class="header">
+        <h2>Learning Dashboard</h2>
+        <div class="menu-btn" onclick="toggleMenu()">⋮</div>
+    </div>
+
+    <div class="menu" id="menu">
+        <a href="settings.html">⚙ Settings</a>
+        <a href="#" onclick="logout()">🚪 Logout</a>
+    </div>
+
+    <div class="card">
+        <h3 id="welcome"></h3>
+        <p>Continue learning and improve your skills 🚀</p>
+    </div>
+
+    <div class="card">
+        <h3>Quick Access</h3>
+        <div class="buttons">
+            <a href="lesson1.html" class="btn">Lessons</a>
+            <a href="quizzes.html" class="btn">Quizzes</a>
+            <a href="aaaaa.html" class="btn">Mini Games</a>
+        </div>
+    </div>
+</div>
+
+<script>
+const registerBox = document.getElementById("registerBox");
+const loginBox = document.getElementById("loginBox");
+const dashboard = document.getElementById("dashboard");
+const welcome = document.getElementById("welcome");
+
+function showLogin() {
+    registerBox.classList.add("hidden");
+    loginBox.classList.remove("hidden");
+}
+
+function showRegister() {
+    loginBox.classList.add("hidden");
+    registerBox.classList.remove("hidden");
+}
+
+function register() {
+    const user = regUser.value.trim();
+    const pass = regPass.value.trim();
+    const strand = regStrand.value;
+    const grade = regGrade.value;
+
+    if (!user || !pass || !strand || !grade) {
+        alert("Please complete all fields");
+        return;
+    }
+
+    localStorage.setItem("user", user);
+    localStorage.setItem("pass", pass);
+    localStorage.setItem("strand", strand);
+    localStorage.setItem("grade", grade);
+
+    alert("Registration successful! Please login.");
+    showLogin();
+}
+
+function login() {
+    if (
+        loginUser.value === localStorage.getItem("user") &&
+        loginPass.value === localStorage.getItem("pass")
+    ) {
+        localStorage.setItem("loggedIn", "true");
+        showDashboard();
+    } else {
+        alert("Invalid login details");
+    }
+}
+
+function showDashboard() {
+    registerBox.classList.add("hidden");
+    loginBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+
+    welcome.textContent =
+        `Welcome ${localStorage.getItem("user")} 👋 (${localStorage.getItem("strand")} - ${localStorage.getItem("grade")})`;
+}
+
+function logout() {
+    localStorage.removeItem("loggedIn");
+    location.reload();
+}
+
+function toggleMenu() {
+    const menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById("menu");
+    const btn = document.querySelector(".menu-btn");
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.style.display = 'none';
+    }
+});
+
+if (localStorage.getItem("loggedIn") === "true") {
+    showDashboard();
+}
+</script>
+
+</body>
+</html>

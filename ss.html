@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Word Scramble Pro</title>
+
+<style>
+:root {
+  --main:#00ffd5;
+  --danger:#ff4d4d;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Poppins,sans-serif;
+  background:linear-gradient(270deg,#0f2027,#203a43,#2c5364);
+  color:white;
+}
+
+.game-box{
+  width:95%;
+  max-width:400px;
+  padding:20px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 0 25px rgba(0,255,213,.4);
+}
+
+h1{
+  color:var(--main);
+  text-shadow:0 0 10px var(--main);
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  margin:10px 0;
+}
+
+.timer-bar{
+  height:10px;
+  background:rgba(255,255,255,.2);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.timer-fill{
+  height:100%;
+  background:linear-gradient(90deg,#00ffd5,#00aaff);
+}
+
+.word{
+  font-size:30px;
+  letter-spacing:4px;
+  margin:15px 0;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  font-size:16px;
+  border:none;
+  border-radius:12px;
+  text-align:center;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  font-weight:bold;
+  border:none;
+  border-radius:15px;
+  background:linear-gradient(90deg,#00ffd5,#00aaff);
+}
+
+.powerups{
+  display:flex;
+  gap:6px;
+  margin-top:10px;
+}
+
+.powerups button{
+  flex:1;
+  font-size:12px;
+  padding:10px;
+}
+
+button:disabled{
+  opacity:.4;
+}
+
+.message{min-height:24px;margin-top:6px}
+.correct{color:var(--main)}
+.wrong{color:var(--danger)}
+
+#hint{
+  font-size:13px;
+  margin-top:6px;
+  color:#ffe;
+}
+
+.back-link{
+  display:block;
+  margin-top:12px;
+  color:var(--main);
+  text-decoration:none;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+
+  
+<div class="game-box">
+<h1>Word Scramble</h1>
+
+<div class="top">
+  <span>Score: <b id="score">0</b></span>
+  <span>Level: <b id="level">1</b></span>
+  <span>Time: <b id="time">40</b>s</span>
+</div>
+
+<div class="timer-bar">
+  <div class="timer-fill" id="timerFill"></div>
+</div>
+
+<div class="word" id="scrambledWord">----</div>
+
+<input id="input" placeholder="Type the word..." autocomplete="off">
+
+<button id="startBtn" onclick="startGame()">Start Game</button>
+<button id="submitBtn" onclick="checkWord()" style="display:none">Submit</button>
+
+<div class="powerups">
+  <button id="freezeBtn" onclick="freezeTime()">⏱ Freeze (1)</button>
+  <button id="revealBtn" onclick="revealLetter()">🔤 Reveal (2)</button>
+  <button id="hintBtn" onclick="freeHint()">💡 Hint (2)</button>
+</div>
+
+<div class="message" id="message"></div>
+<div id="hint"></div>
+
+<a href="aaaaa.html" class="back-link">⬅ Back to Mini Games</a>
+</div>
+
+<script>
+const levels={
+  1:["cat","dog","sun","tree","book"],
+  2:["computer","language","creative","beautiful"],
+  3:["experience","confidence","vocabulary","knowledge"]
+};
+
+let currentWord="",score=0,time=40,level=1,timer;
+let attempts=0,hintUsed=false,frozen=false;
+let freezeUses=1,revealUses=2,hintUses=2;
+
+function scramble(w){
+  let s;
+  do{s=w.split('').sort(()=>Math.random()-.5).join('');}while(s===w);
+  return s;
+}
+
+function startGame(){
+  score=0;time=40;level=1;
+  freezeUses=1;revealUses=2;hintUses=2;
+  updatePowerups();
+
+  document.getElementById("score").textContent=score;
+  document.getElementById("level").textContent=level;
+  document.getElementById("startBtn").style.display="none";
+  document.getElementById("submitBtn").style.display="block";
+  newWord();
+
+  timer=setInterval(()=>{
+    if(!frozen){
+      time--;
+      document.getElementById("time").textContent=time;
+      document.getElementById("timerFill").style.width=(time/40*100)+"%";
+      if(time<=0) endGame();
+    }
+  },1000);
+}
+
+function newWord(){
+  attempts=0;hintUsed=false;
+  const list=levels[level];
+  currentWord=list[Math.floor(Math.random()*list.length)];
+  document.getElementById("scrambledWord").textContent=scramble(currentWord);
+  document.getElementById("input").value="";
+  document.getElementById("hint").textContent="";
+}
+
+function checkWord(){
+  const val=document.getElementById("input").value.toLowerCase();
+  const msg=document.getElementById("message");
+  attempts++;
+
+  if(val===currentWord){
+    score+=hintUsed?1:2;
+    document.getElementById("score").textContent=score;
+    msg.textContent="✔ Correct!";
+    msg.className="message correct";
+
+    if(score%10===0 && level<3){
+      level++;
+      time+=10;
+      document.getElementById("level").textContent=level;
+    }
+    newWord();
+  }else{
+    msg.textContent=`✖ Wrong (${attempts})`;
+    msg.className="message wrong";
+  }
+}
+
+/* POWERUPS */
+function freezeTime(){
+  if(freezeUses<=0) return;
+  freezeUses--;
+  frozen=true;
+  updatePowerups();
+  setTimeout(()=>frozen=false,5000);
+}
+
+function revealLetter(){
+  if(revealUses<=0) return;
+  revealUses--;
+  updatePowerups();
+  const index=Math.floor(Math.random()*currentWord.length);
+  document.getElementById("hint").textContent=
+    `🔤 Letter at position ${index+1}: ${currentWord[index]}`;
+}
+
+function freeHint(){
+  if(hintUses<=0) return;
+  hintUses--;
+  hintUsed=true;
+  updatePowerups();
+  document.getElementById("hint").textContent=
+    `💡 First letter: ${currentWord[0]}, Length: ${currentWord.length}`;
+}
+
+function updatePowerups(){
+  freezeBtn.textContent=`⏱ Freeze (${freezeUses})`;
+  revealBtn.textContent=`🔤 Reveal (${revealUses})`;
+  hintBtn.textContent=`💡 Hint (${hintUses})`;
+
+  freezeBtn.disabled=!freezeUses;
+  revealBtn.disabled=!revealUses;
+  hintBtn.disabled=!hintUses;
+}
+
+function endGame(){
+  clearInterval(timer);
+  document.getElementById("message").textContent=
+    `Game Over! Final Score: ${score}`;
+  document.getElementById("submitBtn").style.display="none";
+  document.getElementById("startBtn").style.display="block";
+}
+
+document.getElementById("input").addEventListener("keyup",e=>{
+  if(e.key==="Enter") checkWord();
+});
+</script>
+
+</body>
+</html>

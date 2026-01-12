@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Filipino to English Game</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        color: #fff;
+    }
+
+    .game-box {
+        background: #fff;
+        padding: 30px;
+        width: 420px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        text-align: center;
+        color: #333;
+    }
+
+    h2 {
+        margin-bottom: 15px;
+        font-family: 'Verdana', sans-serif;
+    }
+
+    .question {
+        font-size: 20px;
+        margin: 15px 0;
+    }
+
+    .hint {
+        font-size: 14px;
+        font-style: italic;
+        color: #555;
+        margin-bottom: 15px;
+    }
+
+    .choices button {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background: #e4e8ff;
+        transition: background 0.3s;
+    }
+
+    .choices button:hover {
+        background: #cfd7ff;
+    }
+
+    .correct {
+        background: #4CAF50 !important;
+        color: white;
+    }
+
+    .wrong {
+        background: #f44336 !important;
+        color: white;
+    }
+
+    .score {
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    .next-btn, .return-btn {
+        margin-top: 15px;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        display: none;
+        font-weight: bold;
+    }
+
+    .next-btn {
+        background: #007bff;
+        color: white;
+    }
+
+    .next-btn:hover {
+        background: #0056b3;
+    }
+
+    .return-btn {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+    .return-btn:hover {
+        background: #495057;
+    }
+
+    @media (max-width: 500px) {
+        .game-box {
+            width: 90%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="game-box">
+    <h2>Filipino → English</h2>
+    <div class="question" id="question"></div>
+    <div class="hint" id="hint"></div>
+
+    <div class="choices" id="choices"></div>
+
+    <button class="next-btn" id="nextBtn">Next</button>
+    <div class="score" id="score">Score: 0</div>
+    <a href="index.html" class="return-btn" id="returnBtn">Return to Main Page</a>
+</div>
+
+<script>
+const questions = [
+    {
+        filipino: "Magandang umaga, kumusta ang iyong tulog?",
+        correct: "Good morning, how was your sleep?",
+        hint: "It's a morning greeting asking about rest.",
+        choices: [
+            "Good morning, how was your sleep?",
+            "Good evening, how are you?",
+            "Hello, how is your day?"
+        ]
+    },
+    {
+        filipino: "Talagang pinahahalagahan ko ang iyong tulong",
+        correct: "I truly appreciate your help",
+        hint: "Expressing gratitude formally.",
+        choices: [
+            "I really thank you",
+            "I truly appreciate your help",
+            "Thanks a lot"
+        ]
+    },
+    {
+        filipino: "Maaari mo bang ipaliwanag ito muli?",
+        correct: "Can you please explain this again?",
+        hint: "Asking someone to repeat an explanation.",
+        choices: [
+            "Can you explain this slowly?",
+            "Can you please explain this again?",
+            "Please show me this"
+        ]
+    },
+    {
+        filipino: "Sana magkaroon ka ng isang kamangha-manghang araw",
+        correct: "I hope you have a wonderful day",
+        hint: "A polite wish for someone's day.",
+        choices: [
+            "I hope you have a wonderful day",
+            "Have a nice night",
+            "Good luck today"
+        ]
+    },
+    {
+        filipino: "Mangyaring dumating sa pulong sa oras",
+        correct: "Please arrive at the meeting on time",
+        hint: "Telling someone to be punctual.",
+        choices: [
+            "Please arrive at the meeting on time",
+            "Don't be late for work",
+            "Join the meeting later"
+        ]
+    },
+    {
+        filipino: "Tatawag ako sa iyo mamaya",
+        correct: "I will call you later",
+        hint: "Talking about contacting someone in the future.",
+        choices: [
+            "I will call you later",
+            "I will meet you tomorrow",
+            "Call me now"
+        ]
+    },
+    {
+        filipino: "Mahalaga ito para sa proyekto",
+        correct: "This is important for the project",
+        hint: "Referring to something crucial for work.",
+        choices: [
+            "This is important for the project",
+            "This is optional for the project",
+            "Project is done"
+        ]
+    },
+    {
+        filipino: "Hindi ko naiintindihan ang ibig mong sabihin",
+        correct: "I don't understand what you mean",
+        hint: "Expressing confusion about someone's words.",
+        choices: [
+            "I don't understand what you mean",
+            "I know what you mean",
+            "Can you speak louder?"
+        ]
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const hintEl = document.getElementById("hint");
+const choicesEl = document.getElementById("choices");
+const scoreEl = document.getElementById("score");
+const nextBtn = document.getElementById("nextBtn");
+const returnBtn = document.getElementById("returnBtn");
+
+function shuffle(array) {
+    // Fisher-Yates shuffle
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function loadQuestion() {
+    const q = questions[currentQuestion];
+    questionEl.textContent = q.filipino;
+    hintEl.textContent = "Hint: " + q.hint;
+    choicesEl.innerHTML = "";
+    nextBtn.style.display = "none";
+
+    // Shuffle choices
+    const shuffledChoices = shuffle([...q.choices]);
+
+    shuffledChoices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.textContent = choice;
+        btn.onclick = () => checkAnswer(btn, choice);
+        choicesEl.appendChild(btn);
+    });
+}
+
+function checkAnswer(button, answer) {
+    const correctAnswer = questions[currentQuestion].correct;
+    const buttons = document.querySelectorAll(".choices button");
+
+    buttons.forEach(btn => btn.disabled = true);
+
+    if (answer === correctAnswer) {
+        button.classList.add("correct");
+        score++;
+    } else {
+        button.classList.add("wrong");
+        buttons.forEach(btn => {
+            if (btn.textContent === correctAnswer) {
+                btn.classList.add("correct");
+            }
+        });
+    }
+
+    scoreEl.textContent = "Score: " + score;
+    nextBtn.style.display = "inline-block";
+}
+
+nextBtn.onclick = () => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+        loadQuestion();
+    } else {
+        questionEl.textContent = "🎉 Game Finished! Your final score is " + score + "/" + questions.length;
+        hintEl.textContent = "";
+        choicesEl.innerHTML = "";
+        nextBtn.style.display = "none";
+        returnBtn.style.display = "inline-block"; // show return button
+    }
+};
+
+// Initially hide return button
+returnBtn.style.display = "none";
+
+loadQuestion();
+</script>
+
+</body>
+</html>

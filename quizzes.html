@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quizzes Game - Improve Your English!</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .quiz-container {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 650px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.7);
+  }
+
+  h1 {
+    margin-bottom: 15px;
+    font-size: 2rem;
+    color: #ffea00;
+    text-shadow: 2px 2px 8px #000;
+  }
+
+  .difficulty {
+    margin-bottom: 20px;
+  }
+
+  select {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .question {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    min-height: 60px;
+  }
+
+  .options button {
+    background: #2575fc;
+    border: none;
+    color: #fff;
+    padding: 12px 20px;
+    margin: 8px 0;
+    width: 100%;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .options button:hover {
+    background: #6a11cb;
+  }
+
+  .score-container {
+    display: none;
+    font-size: 1.4rem;
+    margin-top: 20px;
+  }
+
+  .next-btn, .home-btn {
+    margin-top: 15px;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #ffea00;
+    color: #000;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .next-btn:hover, .home-btn:hover {
+    background: #ffd700;
+  }
+
+  .home-btn {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: black;
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Quizzes Game - Improve Your English!</h1>
+
+  <!-- Difficulty Selection -->
+  <div class="difficulty">
+    <label for="difficulty-select">Select Difficulty: </label>
+    <select id="difficulty-select">
+      <option value="">--Select--</option>
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+  </div>
+
+  <div class="question-container">
+    <div class="question">Select a difficulty to start!</div>
+    <div class="options">
+      <button class="option-btn"></button>
+      <button class="option-btn"></button>
+      <button class="option-btn"></button>
+      <button class="option-btn"></button>
+    </div>
+  </div>
+
+  <button class="next-btn" style="display:none;">Next Question</button>
+  <div class="score-container">Your Score: 0/0</div>
+
+  <!-- Return Home -->
+  <a href="index.html" class="home-btn">Return to Home</a>
+</div>
+
+<script>
+  const quizData = {
+    easy: [
+      {question: "Choose the correct spelling:", options: ["Recieve", "Receive", "Recive", "Receeve"], answer: 1},
+      {question: "Pick the synonym for 'Happy':", options: ["Sad", "Joyful", "Angry", "Tired"], answer: 1}
+    ],
+    medium: [
+      {question: "Choose the correct sentence:", options: [
+        "She don't like apples.", 
+        "She doesn't likes apples.", 
+        "She doesn't like apples.", 
+        "She don't likes apples."
+      ], answer: 2},
+      {question: "Fill in the blank: I ___ to the store yesterday.", options: ["go", "went", "gone", "going"], answer: 1}
+    ],
+    hard: [
+      {question: "Choose the correct word: 'He is the most ___ player in the team.'", options: ["skillful", "more skillful", "skilfullest", "most skillfull"], answer: 0},
+      {question: "Identify the error: 'Neither of the boys were ready.'", options: ["Neither", "of the boys", "were", "ready"], answer: 2}
+    ]
+  };
+
+  const questionEl = document.querySelector(".question");
+  const optionsEl = document.querySelectorAll(".option-btn");
+  const nextBtn = document.querySelector(".next-btn");
+  const scoreContainer = document.querySelector(".score-container");
+  const difficultySelect = document.getElementById("difficulty-select");
+
+  let currentQuestion = 0;
+  let score = 0;
+  let currentQuiz = [];
+
+  function resetOptions() {
+    optionsEl.forEach(btn => {
+      btn.disabled = false;
+      btn.style.background = "#2575fc";
+    });
+  }
+
+  function loadQuestion() {
+    if(currentQuestion >= currentQuiz.length){
+      document.querySelector(".question-container").style.display = "none";
+      nextBtn.style.display = "none";
+      scoreContainer.style.display = "block";
+      scoreContainer.textContent = `Your Score: ${score}/${currentQuiz.length}`;
+      return;
+    }
+    const current = currentQuiz[currentQuestion];
+    questionEl.textContent = current.question;
+    optionsEl.forEach((btn, index) => {
+      btn.textContent = current.options[index];
+      btn.style.display = "block";
+    });
+    resetOptions();
+    nextBtn.style.display = "none";
+  }
+
+  difficultySelect.addEventListener("change", () => {
+    const level = difficultySelect.value;
+    if(level){
+      currentQuiz = quizData[level];
+      currentQuestion = 0;
+      score = 0;
+      scoreContainer.style.display = "none";
+      document.querySelector(".question-container").style.display = "block";
+      loadQuestion();
+    }
+  });
+
+  optionsEl.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      const current = currentQuiz[currentQuestion];
+      if(index === current.answer){
+        btn.style.background = "green";
+        score++;
+      } else {
+        btn.style.background = "red";
+        optionsEl[current.answer].style.background = "green";
+      }
+      optionsEl.forEach(b => b.disabled = true);
+      nextBtn.style.display = "inline-block";
+    });
+  });
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestion++;
+    loadQuestion();
+  });
+</script>
+
+</body>
+</html>
