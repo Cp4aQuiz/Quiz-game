@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Quiz Game</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+.box {
+    background: #fff;
+    width: 100%;
+    max-width: 520px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+h1 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+.question {
+    font-size: 17px;
+    margin: 15px 0;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #f1f1f1;
+    cursor: pointer;
+}
+button:hover {
+    background: #667eea;
+    color: white;
+}
+.correct { background: #4CAF50 !important; color: white; }
+.wrong { background: #f44336 !important; color: white; }
+
+.next-btn {
+    background: #00c853;
+    color: white;
+    display: none;
+}
+
+.restart-btn {
+    background: #ff9800;
+    color: white;
+    margin-top: 10px;
+}
+
+.home-link {
+    display: inline-block;
+    margin-bottom: 10px;
+    text-decoration: none;
+    background: #1976d2;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+.home-link:hover {
+    background: #0d47a1;
+}
+
+.difficulty button {
+    background: #1976d2;
+    color: white;
+    font-size: 16px;
+}
+
+.score {
+    margin-top: 15px;
+    font-size: 18px;
+}
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div class="box" id="startScreen">
+    <a href="index.html" class="home-link">🏠 Back to Home</a>
+    <h1>📘 English Quiz Game</h1>
+    <p>Select Difficulty</p>
+    <div class="difficulty">
+        <button onclick="startQuiz('easy')">Easy</button>
+        <button onclick="startQuiz('medium')">Medium</button>
+        <button onclick="startQuiz('hard')">Hard</button>
+    </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div class="box" id="quizScreen" style="display:none;">
+    <a href="index.html" class="home-link">🏠 Back to Home</a>
+    <div class="question" id="question"></div>
+    <div id="choices"></div>
+    <button class="next-btn" id="nextBtn">Next</button>
+    <div class="score" id="score"></div>
+    <button class="restart-btn" id="restartBtn" style="display:none;" onclick="restartQuiz()">🔁 Restart Quiz</button>
+</div>
+
+<script>
+const questions = {
+easy: [
+ {q:"She left her keys ___ the table.", c:["IN","ON","AT"], a:"ON"},
+ {q:"He walked ___ the room quietly.", c:["INTO","ON","BY"], a:"INTO"},
+ {q:"The cat is hiding ___ the table.", c:["UNDER","ON","ABOVE"], a:"UNDER"},
+ {q:"Which word means extremely happy?", c:["ELATED","ANGRY","TIRED"], a:"ELATED"},
+ {q:"She likes ___ jackfruit nor dragon fruit.", c:["BOTH","EITHER","NEITHER"], a:"NEITHER"}
+],
+
+medium: [
+ {q:"A word that describes a noun is called a ___.", c:["VERB","ADVERB","ADJECTIVE"], a:"ADJECTIVE"},
+ {q:"Which word shows future intention?", c:["MIGHT","WILL","WAS"], a:"WILL"},
+ {q:"Which word is a modal auxiliary indicating ability?", c:["CAN","DID","FROM"], a:"CAN"},
+ {q:"You ___ wear your school uniform every Monday.", c:["MUST","SHOULD","HAVE"], a:"MUST"},
+ {q:"A word that modifies a verb, adjective, or another adverb", c:["ADVERB","VERB","NOUN"], a:"ADVERB"},
+ {q:"A word that names a person, place, thing, or idea", c:["NOUN","VERB","ADVERB"], a:"NOUN"}
+],
+
+hard: [
+ {q:"Word meaning difficult to understand", c:["ESOTERIC","VERBOSE","SANGUINE"], a:"ESOTERIC"},
+ {q:"Unable to be expressed in words", c:["INEFFABLE","ELATED","NOISY"], a:"INEFFABLE"},
+ {q:"Cunning and deceitful behavior", c:["MACHIAVELLIAN","SANGUINE","VERBOSE"], a:"MACHIAVELLIAN"},
+ {q:"Complaining frequently", c:["QUERULOUS","ANGRY","QUIET"], a:"QUERULOUS"},
+ {q:"Optimistic or hopeful", c:["SANGUINE","TIRED","APATHETIC"], a:"SANGUINE"},
+ {q:"Using many words unnecessarily", c:["VERBOSE","AMBIGUOUS","CLEAR"], a:"VERBOSE"},
+ {q:"Word meaning unclear or vague", c:["AMBIGUOUS","ARROGANT","COMPOSED"], a:"AMBIGUOUS"},
+ {q:"Excessively proud of oneself", c:["ARROGANT","MODEST","APATHETIC"], a:"ARROGANT"},
+ {q:"Calm and showing self-control", c:["COMPOSED","ANGRY","NERVOUS"], a:"COMPOSED"},
+ {q:"Lacking interest or enthusiasm", c:["APATHETIC","ELATED","EAGER"], a:"APATHETIC"},
+ {q:"A tendency to talk a lot", c:["LOQUACIOUS","QUIET","SHY"], a:"LOQUACIOUS"},
+ {q:"Showing great attention to detail", c:["METICULOUS","CARELESS","RECKLESS"], a:"METICULOUS"}
+]
+};
+
+let quiz = [];
+let index = 0;
+let score = 0;
+let currentLevel = "";
+
+const startScreen = document.getElementById("startScreen");
+const quizScreen = document.getElementById("quizScreen");
+const qEl = document.getElementById("question");
+const cEl = document.getElementById("choices");
+const nextBtn = document.getElementById("nextBtn");
+const scoreEl = document.getElementById("score");
+const restartBtn = document.getElementById("restartBtn");
+
+function startQuiz(level) {
+    currentLevel = level;
+    quiz = questions[level];
+    index = 0;
+    score = 0;
+    startScreen.style.display = "none";
+    quizScreen.style.display = "block";
+    restartBtn.style.display = "none";
+    scoreEl.textContent = "";
+    loadQuestion();
+}
+
+function loadQuestion() {
+    cEl.innerHTML = "";
+    nextBtn.style.display = "none";
+    qEl.textContent = quiz[index].q;
+
+    quiz[index].c.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.textContent = choice;
+        btn.onclick = () => checkAnswer(btn, choice);
+        cEl.appendChild(btn);
+    });
+}
+
+function checkAnswer(btn, choice) {
+    Array.from(cEl.children).forEach(b => b.disabled = true);
+
+    if (choice === quiz[index].a) {
+        btn.classList.add("correct");
+        score++;
+    } else {
+        btn.classList.add("wrong");
+        Array.from(cEl.children).forEach(b => {
+            if (b.textContent === quiz[index].a) {
+                b.classList.add("correct");
+            }
+        });
+    }
+    nextBtn.style.display = "block";
+}
+
+nextBtn.onclick = () => {
+    index++;
+    if (index < quiz.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
+};
+
+function showResult() {
+    qEl.textContent = "🎉 Quiz Completed!";
+    cEl.innerHTML = "";
+    nextBtn.style.display = "none";
+    scoreEl.textContent = `Your Score: ${score} / ${quiz.length}`;
+    restartBtn.style.display = "block";
+}
+
+function restartQuiz() {
+    startQuiz(currentLevel);
+}
+</script>
+
+</body>
+</html>
