@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Page</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto&display=swap" rel="stylesheet">
+
+<style>
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== BODY ===== */
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 50px 15px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+/* ===== BOX CARDS ===== */
+.box {
+    background: #fff;
+    width: 100%;
+    max-width: 280px;
+    padding: 30px 20px;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.box:hover {
+    transform: translateY(-8px);
+}
+
+.box h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* ===== BUTTONS & LINKS ===== */
+.box a,
+.box button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.box a:hover,
+.box button:hover {
+    background: linear-gradient(135deg, #2575fc, #6a11cb);
+}
+
+/* ===== ACCORDION SECTIONS ===== */
+section {
+    width: 100%;
+    max-width: 900px;
+    margin: 15px auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+/* ===== ACCORDION HEADER ===== */
+.section-header {
+    padding: 20px 25px;
+    background: #f3f3f3;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ===== ACCORDION CONTENT ===== */
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding: 0 25px;
+}
+
+.section-content.open {
+    padding: 20px 25px;
+}
+
+.section-content p {
+    margin-bottom: 15px;
+    line-height: 1.7;
+    color: #444;
+}
+
+.section-content ul {
+    padding-left: 20px;
+}
+
+.section-content li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 10px;
+    }
+
+    .box {
+        max-width: 100%;
+    }
+
+    section {
+        margin: 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="box">
+        <h2>Scrabble Game</h2>
+        <a href="ss.html">Start Game</a>
+    </div>
+
+    <div class="box">
+        <h2>Filipino to English</h2>
+        <a href="abc.html">Play</a>
+        <button onclick="toggleSection('wordlist')">Word List</button>
+    </div>
+
+    <div class="box">
+        <h2>Help</h2>
+        <button onclick="toggleSection('faq')">FAQ</button>
+        <button onclick="toggleSection('contact')">Contact Us</button>
+    </div>
+</div>
+
+<!-- WORD LIST -->
+<section id="wordlist">
+    <div class="section-header" onclick="toggleSection('wordlist')">
+        📚 Word List
+        <span>▼</span>
+    </div>
+    <div class="section-content">
+        <ul>
+            <li><b>CAT</b> – A small domestic animal</li>
+            <li><b>DOG</b> – A loyal pet animal</li>
+            <li><b>SUN</b> – The star that gives light and heat</li>
+            <li><b>MOON</b> – Seen at night in the sky</li>
+            <li><b>TREE</b> – A tall plant with leaves</li>
+            <li><b>BOOK</b> – Something you read</li>
+            <li><b>STAR</b> – Shines in the night sky</li>
+            <li><b>FISH</b> – An animal that lives in water</li>
+        </ul>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="section-header" onclick="toggleSection('faq')">
+        ❓ FAQ
+        <span>▼</span>
+    </div>
+    <div class="section-content">
+        <p><b>Q:</b> What is this game about?<br>
+        <b>A:</b> A Filipino-to-English vocabulary learning game.</p>
+
+        <p><b>Q:</b> Do I need an account?<br>
+        <b>A:</b> No account needed.</p>
+
+        <p><b>Q:</b> Is this educational?<br>
+        <b>A:</b> Yes, it improves vocabulary.</p>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="section-header" onclick="toggleSection('contact')">
+        📩 Contact Us
+        <span>▼</span>
+    </div>
+    <div class="section-content">
+        <p>Email: <b>Cp4aquizgame@gmail.com</b></p>
+        <p>Website: <b>https://cp4aquiz.github.io/Quiz-game/</b></p>
+    </div>
+</section>
+
+<script>
+function toggleSection(id) {
+    const section = document.querySelector(`#${id} .section-content`);
+    if (!section) return;
+
+    if (section.style.maxHeight) {
+        section.style.maxHeight = null;
+        section.classList.remove("open");
+    } else {
+        section.style.maxHeight = section.scrollHeight + "px";
+        section.classList.add("open");
+    }
+}
+</script>
+
+</body>
+</html>
